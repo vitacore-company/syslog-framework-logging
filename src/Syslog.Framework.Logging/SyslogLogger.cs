@@ -19,12 +19,6 @@ namespace Syslog.Framework.Logging
 		private readonly int? _processId;
 		private readonly IMessageSender _messageSender;
 
-		[Obsolete("Remains for backward compatibility. Will be removed in future. Use the other overload.")]
-		public SyslogLogger(string name, SyslogLoggerSettings settings, string host, LogLevel lvl)
-			: this(name, settings, host, lvl, new UdpMessageSender(settings.ServerHost, settings.ServerPort))
-		{
-		}
-		
 		public SyslogLogger(string name, SyslogLoggerSettings settings, string host, LogLevel lvl, IMessageSender messageSender)
 		{
 			_name = name;
@@ -64,7 +58,12 @@ namespace Syslog.Framework.Logging
 			var priority = ((int)_settings.FacilityType * 8) + (int)severity;
 			var now = _settings.UseUtc ? DateTime.UtcNow : DateTime.Now;
 			var msg = FormatMessage(priority, now, _host, _name, _processId, eventId.Id, message);
-			var raw = Encoding.ASCII.GetBytes(msg);
+			Encoding encoding = Encoding.ASCII;
+			if (!String.IsNullOrEmpty(_settings.EncodingString))
+			{
+				encoding = Encoding.GetEncoding(_settings.EncodingString);
+			}
+			var raw = encoding.GetBytes(msg);
 
 			try
 			{
@@ -127,12 +126,6 @@ namespace Syslog.Framework.Logging
 	/// </summary>
 	public class Syslog3164Logger : SyslogLogger
 	{
-		[Obsolete("Remains for backward compatibility. Will be removed in future. Use the other overload.")]
-		public Syslog3164Logger(string name, SyslogLoggerSettings settings, string host, LogLevel lvl)
-			: base(name, settings, host, lvl)
-		{
-		}
-		
 		public Syslog3164Logger(string name, SyslogLoggerSettings settings, string host, LogLevel lvl, IMessageSender messageSender)
 			: base(name, settings, host, lvl, messageSender)
 		{
@@ -153,12 +146,6 @@ namespace Syslog.Framework.Logging
 	{
 		private const string NilValue = "-";
 		private readonly string _structuredData;
-		
-		[Obsolete("Remains for backward compatibility. Will be removed in future. Use the other overload.")]
-		public Syslog5424v1Logger(string name, SyslogLoggerSettings settings, string host, LogLevel lvl)
-			: base(name, settings, host, lvl)
-		{
-		}
 
 		public Syslog5424v1Logger(string name, SyslogLoggerSettings settings, string host, LogLevel lvl, IMessageSender messageSender)
 			: base(name, settings, host, lvl, messageSender)

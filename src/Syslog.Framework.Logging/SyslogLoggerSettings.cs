@@ -64,6 +64,14 @@ namespace Syslog.Framework.Logging
 		/// </remarks>
 		public IMessageSender CustomMessageSender { get; set; } 
 
+		/// <summary>
+		/// Gets or sets encoding for sending messages
+		/// </summary>
+		/// <remarks>
+		/// Defaults to Encoding.ASCII
+		/// </remarks>
+		public string EncodingString { get; set; }
+
 		#endregion
 	}
 

@@ -51,6 +51,7 @@ namespace Syslog.Framework.Logging
 		public void Dispose()
 		{
 			_loggers.Clear();
+			(_messageSender as IDisposable)?.Dispose();
 		}
 	}
 }
