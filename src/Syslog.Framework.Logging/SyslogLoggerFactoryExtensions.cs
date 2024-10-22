@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Syslog.Framework.Logging
@@ -29,7 +30,7 @@ namespace Syslog.Framework.Logging
 
 		public static void AddSyslog(this ILoggingBuilder logbldr, SyslogLoggerSettings settings, string hostName = null, LogLevel logLevel = LogLevel.Debug)
 		{
-			logbldr.AddProvider(new SyslogLoggerProvider(settings, hostName ?? System.Environment.MachineName, logLevel));
+            logbldr.Services.AddSingleton(new SyslogLoggerProvider(settings, hostName ?? System.Environment.MachineName, logLevel));
 		}
 	}
 }
